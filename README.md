@@ -1,4 +1,4 @@
-: # TaskFlow Dashboard
+# TaskFlow Dashboard
 
 A lightweight task and project management dashboard for teams. Kanban board, productivity stats, and priority filters.
 
