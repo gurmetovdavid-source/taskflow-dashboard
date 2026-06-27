@@ -29,6 +29,8 @@ Open http://localhost:3000
 
 ## Live demo
 
+🌐 **Open demo:** [taskflow-dashboard.vercel.app](https://taskflow-dashboard.vercel.app)
+
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/gurmetovdavid-source/taskflow-dashboard)
 
 ## License
