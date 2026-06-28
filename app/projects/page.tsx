@@ -47,7 +47,7 @@ export default function ProjectsPage() {
   if (!loaded) return null;
 
   return (
-    <main className="min-h-screen p-6 md:p-10">
+    <div className="min-h-screen bg-slate-50/50 p-8">
       <div className="mx-auto max-w-5xl">
         <header className="mb-8">
           <h1 className="text-2xl font-bold text-slate-900">Projects</h1>
@@ -55,13 +55,14 @@ export default function ProjectsPage() {
         </header>
 
         <Card className="mb-6">
-          <div className="grid gap-4 sm:grid-cols-2">
+          <h2 className="text-base font-semibold text-slate-900">Add project</h2>
+          <div className="mt-4 grid gap-3 sm:grid-cols-2">
             <Input placeholder="Project name" value={name} onChange={(e) => setName(e.target.value)} />
             <Input placeholder="Description" value={description} onChange={(e) => setDescription(e.target.value)} />
           </div>
           <div className="mt-4">
             <Button onClick={addProject}>
-              <Plus size={16} className="mr-2" /> Add project
+              <Plus size={16} /> Add project
             </Button>
           </div>
         </Card>
@@ -70,18 +71,27 @@ export default function ProjectsPage() {
           {projects.map((project) => (
             <Card key={project.id} className="flex flex-col justify-between">
               <div>
-                <div className="mb-2 flex items-start justify-between">
+                <div className="mb-2 flex items-start justify-between gap-2">
                   <CardTitle>{project.name}</CardTitle>
-                  <button onClick={() => deleteProject(project.id)} className="text-slate-400 hover:text-danger">
+                  <button
+                    onClick={() => deleteProject(project.id)}
+                    className="text-slate-300 transition-colors hover:text-rose-500"
+                  >
                     <Trash2 size={14} />
                   </button>
                 </div>
                 <p className="mb-4 text-sm text-slate-500">{project.description}</p>
               </div>
               <div>
-                <div className="mb-1 flex items-center justify-between text-xs text-slate-500">
+                <div className="mb-2 flex items-center justify-between text-xs font-medium text-slate-500">
                   <span>Progress</span>
                   <span>{project.progress}%</span>
+                </div>
+                <div className="h-2 w-full overflow-hidden rounded-full bg-slate-100">
+                  <div
+                    className="h-full rounded-full bg-primary transition-all"
+                    style={{ width: `${project.progress}%` }}
+                  />
                 </div>
                 <input
                   type="range"
@@ -89,13 +99,13 @@ export default function ProjectsPage() {
                   max={100}
                   value={project.progress}
                   onChange={(e) => updateProgress(project.id, parseInt(e.target.value, 10))}
-                  className="w-full accent-indigo-600"
+                  className="mt-4 w-full accent-primary"
                 />
               </div>
             </Card>
           ))}
         </div>
       </div>
-    </main>
+    </div>
   );
 }

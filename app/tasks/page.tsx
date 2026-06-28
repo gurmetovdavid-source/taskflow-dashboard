@@ -14,10 +14,10 @@ const statusLabels: Record<TaskStatus, string> = {
   done: 'Done',
 };
 
-const priorityColors: Record<Priority, string> = {
-  low: 'bg-green-100 text-green-700',
-  medium: 'bg-amber-100 text-amber-700',
-  high: 'bg-red-100 text-red-700',
+const priorityClasses: Record<Priority, string> = {
+  low: 'bg-emerald-50 text-emerald-700 ring-emerald-200',
+  medium: 'bg-amber-50 text-amber-700 ring-amber-200',
+  high: 'bg-rose-50 text-rose-700 ring-rose-200',
 };
 
 export default function TasksPage() {
@@ -54,7 +54,7 @@ export default function TasksPage() {
   if (!loaded) return null;
 
   return (
-    <main className="min-h-screen p-6 md:p-10">
+    <div className="min-h-screen bg-slate-50/50 p-8">
       <div className="mx-auto max-w-5xl">
         <header className="mb-8">
           <h1 className="text-2xl font-bold text-slate-900">Tasks</h1>
@@ -62,7 +62,7 @@ export default function TasksPage() {
         </header>
 
         <Card className="mb-6">
-          <div className="grid gap-4 sm:grid-cols-3">
+          <div className="grid gap-3 sm:grid-cols-3">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
               <Input
@@ -89,13 +89,13 @@ export default function TasksPage() {
 
         <div className="space-y-3">
           {filtered.map((task) => (
-            <div
+            <Card
               key={task.id}
-              className="flex items-center justify-between rounded-xl border border-slate-200 bg-white p-4 shadow-sm"
+              className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center"
             >
               <div>
-                <h4 className="font-medium text-slate-900">{task.title}</h4>
-                <div className="mt-1 flex items-center gap-3 text-xs text-slate-500">
+                <h4 className="text-sm font-medium text-slate-900">{task.title}</h4>
+                <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-slate-500">
                   <span className="font-medium text-slate-700">{task.assignee}</span>
                   <span>•</span>
                   <span>{task.dueDate}</span>
@@ -104,20 +104,25 @@ export default function TasksPage() {
                 </div>
               </div>
               <div className="flex items-center gap-3">
-                <span className={`rounded-full px-2 py-0.5 text-xs font-medium ${priorityColors[task.priority]}`}>
+                <span
+                  className={`rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide ring-1 ${priorityClasses[task.priority]}`}
+                >
                   {task.priority}
                 </span>
-                <button onClick={() => deleteTask(task.id)} className="text-slate-400 hover:text-danger">
+                <button
+                  onClick={() => deleteTask(task.id)}
+                  className="text-slate-300 transition-colors hover:text-rose-500"
+                >
                   <Trash2 size={16} />
                 </button>
               </div>
-            </div>
+            </Card>
           ))}
           {filtered.length === 0 && (
             <p className="py-8 text-center text-sm text-slate-400">No tasks match your filters.</p>
           )}
         </div>
       </div>
-    </main>
+    </div>
   );
 }

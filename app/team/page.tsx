@@ -12,6 +12,12 @@ const team = [
   { name: 'John', role: 'Frontend Engineer', email: 'john@example.com' },
 ];
 
+const avatarColors = [
+  'bg-indigo-100 text-indigo-700',
+  'bg-emerald-100 text-emerald-700',
+  'bg-amber-100 text-amber-700',
+];
+
 export default function TeamPage() {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [loaded, setLoaded] = useState(false);
@@ -36,7 +42,7 @@ export default function TeamPage() {
   if (!loaded) return null;
 
   return (
-    <main className="min-h-screen p-6 md:p-10">
+    <div className="min-h-screen bg-slate-50/50 p-8">
       <div className="mx-auto max-w-5xl">
         <header className="mb-8">
           <h1 className="text-2xl font-bold text-slate-900">Team</h1>
@@ -44,10 +50,12 @@ export default function TeamPage() {
         </header>
 
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {stats.map((member) => (
+          {stats.map((member, idx) => (
             <Card key={member.name}>
               <div className="flex items-center gap-4">
-                <div className="flex h-12 w-12 items-center justify-center rounded-full bg-indigo-100 text-lg font-bold text-indigo-700">
+                <div
+                  className={`flex h-12 w-12 items-center justify-center rounded-xl text-lg font-bold ${avatarColors[idx % avatarColors.length]}`}
+                >
                   {member.name[0]}
                 </div>
                 <div>
@@ -55,26 +63,26 @@ export default function TeamPage() {
                   <p className="text-xs text-slate-500">{member.role}</p>
                 </div>
               </div>
-              <div className="mt-4 grid grid-cols-3 gap-2 text-center">
-                <div className="rounded-lg bg-slate-50 p-2">
+              <div className="mt-5 grid grid-cols-3 gap-2 text-center">
+                <div className="rounded-xl bg-slate-50 p-2">
                   <Clock size={16} className="mx-auto mb-1 text-slate-400" />
-                  <p className="text-lg font-bold">{member.total}</p>
-                  <p className="text-[10px] uppercase text-slate-400">Tasks</p>
+                  <p className="text-lg font-bold text-slate-900">{member.total}</p>
+                  <p className="text-[10px] font-medium uppercase tracking-wide text-slate-400">Tasks</p>
                 </div>
-                <div className="rounded-lg bg-slate-50 p-2">
-                  <CheckCircle2 size={16} className="mx-auto mb-1 text-green-500" />
-                  <p className="text-lg font-bold">{member.done}</p>
-                  <p className="text-[10px] uppercase text-slate-400">Done</p>
+                <div className="rounded-xl bg-slate-50 p-2">
+                  <CheckCircle2 size={16} className="mx-auto mb-1 text-emerald-500" />
+                  <p className="text-lg font-bold text-slate-900">{member.done}</p>
+                  <p className="text-[10px] font-medium uppercase tracking-wide text-slate-400">Done</p>
                 </div>
-                <div className="rounded-lg bg-slate-50 p-2">
-                  <AlertCircle size={16} className="mx-auto mb-1 text-red-500" />
-                  <p className="text-lg font-bold">{member.high}</p>
-                  <p className="text-[10px] uppercase text-slate-400">High</p>
+                <div className="rounded-xl bg-slate-50 p-2">
+                  <AlertCircle size={16} className="mx-auto mb-1 text-rose-500" />
+                  <p className="text-lg font-bold text-slate-900">{member.high}</p>
+                  <p className="text-[10px] font-medium uppercase tracking-wide text-slate-400">High</p>
                 </div>
               </div>
               <a
                 href={`mailto:${member.email}`}
-                className="mt-4 flex items-center justify-center gap-2 rounded-lg border border-slate-200 px-3 py-2 text-xs font-medium text-slate-600 hover:bg-slate-50"
+                className="mt-5 flex items-center justify-center gap-2 rounded-xl border border-slate-200 px-3 py-2 text-xs font-medium text-slate-600 transition-colors hover:bg-slate-50 hover:text-slate-900"
               >
                 <Mail size={14} /> {member.email}
               </a>
@@ -82,6 +90,6 @@ export default function TeamPage() {
           ))}
         </div>
       </div>
-    </main>
+    </div>
   );
 }

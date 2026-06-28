@@ -7,7 +7,16 @@ import { Input } from '@/components/ui/input';
 import { Select } from '@/components/ui/select';
 import { Task, TaskStatus, Priority } from '@/lib/types';
 import { getTasks, resetDemo, saveTasks } from '@/lib/storage';
-import { CheckCircle2, Clock, Plus, RotateCcw, Trash2 } from 'lucide-react';
+import {
+  AlertCircle,
+  CheckCircle2,
+  ChevronLeft,
+  ChevronRight,
+  Clock,
+  Plus,
+  RotateCcw,
+  Trash2,
+} from 'lucide-react';
 
 const columns: TaskStatus[] = ['todo', 'in-progress', 'done'];
 
@@ -17,10 +26,16 @@ const columnTitles: Record<TaskStatus, string> = {
   done: 'Done',
 };
 
+const columnColors: Record<TaskStatus, string> = {
+  todo: 'bg-slate-100 text-slate-600',
+  'in-progress': 'bg-indigo-100 text-indigo-700',
+  done: 'bg-emerald-100 text-emerald-700',
+};
+
 const priorityColors: Record<Priority, string> = {
-  low: 'bg-green-100 text-green-700',
-  medium: 'bg-amber-100 text-amber-700',
-  high: 'bg-red-100 text-red-700',
+  low: 'bg-emerald-50 text-emerald-700 ring-emerald-200',
+  medium: 'bg-amber-50 text-amber-700 ring-amber-200',
+  high: 'bg-rose-50 text-rose-700 ring-rose-200',
 };
 
 export default function DashboardPage() {
@@ -41,7 +56,8 @@ export default function DashboardPage() {
     const total = tasks.length;
     const done = tasks.filter((t) => t.status === 'done').length;
     const high = tasks.filter((t) => t.priority === 'high').length;
-    return { total, done, high, progress: total ? Math.round((done / total) * 100) : 0 };
+    const inProgress = tasks.filter((t) => t.status === 'in-progress').length;
+    return { total, done, high, inProgress, progress: total ? Math.round((done / total) * 100) : 0 };
   }, [tasks]);
 
   const addTask = () => {
@@ -69,41 +85,36 @@ export default function DashboardPage() {
   if (!loaded) return null;
 
   return (
-    <main className="min-h-screen p-6 md:p-10">
+    <div className="min-h-screen bg-slate-50/50 p-8">
       <div className="mx-auto max-w-7xl">
         <header className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <h1 className="text-2xl font-bold text-slate-900">Dashboard</h1>
-            <p className="text-sm text-slate-500">Team task board and project overview</p>
+            <p className="text-sm text-slate-500">Track tasks and team progress at a glance</p>
           </div>
           <Button variant="secondary" onClick={() => { resetDemo(); setTasks(getTasks()); }}>
-            <RotateCcw size={16} className="mr-2" /> Reset board
+            <RotateCcw size={16} /> Reset board
           </Button>
         </header>
 
-        <section className="mb-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-          <Card>
-            <p className="text-sm font-medium text-slate-500">Total tasks</p>
-            <p className="mt-1 text-2xl font-bold">{stats.total}</p>
-          </Card>
-          <Card>
-            <p className="text-sm font-medium text-slate-500">Completed</p>
-            <p className="mt-1 text-2xl font-bold text-secondary">{stats.done}</p>
-          </Card>
-          <Card>
-            <p className="text-sm font-medium text-slate-500">High priority</p>
-            <p className="mt-1 text-2xl font-bold text-danger">{stats.high}</p>
-          </Card>
-          <Card>
-            <p className="text-sm font-medium text-slate-500">Progress</p>
-            <p className="mt-1 text-2xl font-bold text-primary">{stats.progress}%</p>
-          </Card>
+        <section className="mb-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <StatCard label="Total tasks" value={stats.total} icon={ListChecks} color="text-primary" bg="bg-indigo-50" />
+          <StatCard label="Completed" value={stats.done} icon={CheckCircle2} color="text-emerald-600" bg="bg-emerald-50" />
+          <StatCard label="High priority" value={stats.high} icon={AlertCircle} color="text-rose-600" bg="bg-rose-50" />
+          <StatCard label="Progress" value={`${stats.progress}%`} icon={Clock} color="text-amber-600" bg="bg-amber-50" />
         </section>
 
-        <section className="mb-8 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-          <h2 className="mb-4 text-lg font-semibold">Add task</h2>
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-6">
-            <Input className="lg:col-span-2" placeholder="Task title" value={form.title || ''} onChange={(e) => setForm({ ...form, title: e.target.value })} />
+        <Card className="mb-8">
+          <div className="flex items-center justify-between">
+            <h2 className="text-base font-semibold text-slate-900">Add task</h2>
+          </div>
+          <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-6">
+            <Input
+              className="lg:col-span-2"
+              placeholder="Task title"
+              value={form.title || ''}
+              onChange={(e) => setForm({ ...form, title: e.target.value })}
+            />
             <Input placeholder="Assignee" value={form.assignee || ''} onChange={(e) => setForm({ ...form, assignee: e.target.value })} />
             <Select value={form.status} onChange={(e) => setForm({ ...form, status: e.target.value as TaskStatus })}>
               <option value="todo">To Do</option>
@@ -119,28 +130,33 @@ export default function DashboardPage() {
           </div>
           <div className="mt-4">
             <Button onClick={addTask}>
-              <Plus size={16} className="mr-2" /> Add task
+              <Plus size={16} /> Add task
             </Button>
           </div>
-        </section>
+        </Card>
 
         <section className="grid gap-6 lg:grid-cols-3">
           {columns.map((status) => (
-            <Card key={status} className="min-h-[300px]">
-              <div className="mb-4 flex items-center justify-between">
-                <CardTitle>{columnTitles[status]}</CardTitle>
-                <span className="rounded-full bg-slate-100 px-2 py-1 text-xs font-medium text-slate-600">
-                  {tasks.filter((t) => t.status === status).length}
-                </span>
+            <div key={status} className="flex flex-col">
+              <div className="mb-3 flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <span className={`rounded-lg px-2 py-1 text-xs font-semibold ${columnColors[status]}`}>
+                    {columnTitles[status]}
+                  </span>
+                  <span className="text-xs font-medium text-slate-400">{tasks.filter((t) => t.status === status).length}</span>
+                </div>
               </div>
-              <div className="space-y-3">
+              <div className="flex-1 space-y-3">
                 {tasks
                   .filter((t) => t.status === status)
                   .map((task) => (
-                    <div key={task.id} className="rounded-xl border border-slate-200 bg-slate-50 p-4">
-                      <div className="flex items-start justify-between">
-                        <h4 className="font-medium text-slate-900">{task.title}</h4>
-                        <button onClick={() => deleteTask(task.id)} className="text-slate-400 hover:text-danger">
+                    <Card key={task.id} className="group transition-shadow hover:shadow-md">
+                      <div className="flex items-start justify-between gap-3">
+                        <h4 className="text-sm font-medium text-slate-900">{task.title}</h4>
+                        <button
+                          onClick={() => deleteTask(task.id)}
+                          className="text-slate-300 transition-colors hover:text-rose-500"
+                        >
                           <Trash2 size={14} />
                         </button>
                       </div>
@@ -150,35 +166,65 @@ export default function DashboardPage() {
                         <span>{task.dueDate}</span>
                       </div>
                       <div className="mt-3 flex items-center justify-between">
-                        <span className={`rounded-full px-2 py-0.5 text-xs font-medium ${priorityColors[task.priority]}`}>
+                        <span
+                          className={`rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide ring-1 ${priorityColors[task.priority]}`}
+                        >
                           {task.priority}
                         </span>
-                        <div className="flex gap-1">
+                        <div className="flex items-center gap-1">
                           {status !== 'todo' && (
                             <button
                               onClick={() => moveTask(task.id, columns[columns.indexOf(status) - 1])}
-                              className="rounded p-1 text-slate-400 hover:bg-slate-200"
+                              className="rounded-lg p-1 text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-700"
+                              aria-label="Move back"
                             >
-                              <Clock size={14} />
+                              <ChevronLeft size={16} />
                             </button>
                           )}
                           {status !== 'done' && (
                             <button
                               onClick={() => moveTask(task.id, columns[columns.indexOf(status) + 1])}
-                              className="rounded p-1 text-slate-400 hover:bg-slate-200"
+                              className="rounded-lg p-1 text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-700"
+                              aria-label="Move forward"
                             >
-                              <CheckCircle2 size={14} />
+                              <ChevronRight size={16} />
                             </button>
                           )}
                         </div>
                       </div>
-                    </div>
+                    </Card>
                   ))}
               </div>
-            </Card>
+            </div>
           ))}
         </section>
       </div>
-    </main>
+    </div>
+  );
+}
+
+function StatCard({
+  label,
+  value,
+  icon: Icon,
+  color,
+  bg,
+}: {
+  label: string;
+  value: string | number;
+  icon: React.ElementType;
+  color: string;
+  bg: string;
+}) {
+  return (
+    <Card className="flex items-center gap-4">
+      <div className={`flex h-11 w-11 items-center justify-center rounded-xl ${bg}`}>
+        <Icon size={20} className={color} />
+      </div>
+      <div>
+        <p className="text-xs font-medium text-slate-500">{label}</p>
+        <p className="text-xl font-bold text-slate-900">{value}</p>
+      </div>
+    </Card>
   );
 }
