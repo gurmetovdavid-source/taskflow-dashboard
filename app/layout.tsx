@@ -1,10 +1,7 @@
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
 import Link from 'next/link';
 import './globals.css';
-import { LayoutDashboard, FolderKanban, ListChecks, Users } from 'lucide-react';
-
-const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
+import { LayoutDashboard, FolderOpen, CheckSquare, Users } from 'lucide-react';
 
 export const metadata: Metadata = {
   title: 'TaskFlow Dashboard',
@@ -13,8 +10,8 @@ export const metadata: Metadata = {
 
 const nav = [
   { href: '/', label: 'Dashboard', icon: LayoutDashboard },
-  { href: '/projects', label: 'Projects', icon: FolderKanban },
-  { href: '/tasks', label: 'Tasks', icon: ListChecks },
+  { href: '/projects', label: 'Projects', icon: FolderOpen },
+  { href: '/tasks', label: 'Tasks', icon: CheckSquare },
   { href: '/team', label: 'Team', icon: Users },
 ];
 
@@ -24,8 +21,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={inter.variable}>
-      <body className="font-sans">
+    <html lang="en">
+      <body className="font-sans antialiased">
         <div className="flex min-h-screen">
           <aside className="fixed inset-y-0 left-0 z-30 flex w-64 flex-col border-r border-slate-200 bg-white">
             <div className="flex h-16 items-center gap-3 border-b border-slate-100 px-6">

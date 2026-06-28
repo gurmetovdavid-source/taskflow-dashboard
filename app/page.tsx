@@ -12,6 +12,7 @@ import {
   CheckCircle2,
   ChevronLeft,
   ChevronRight,
+  ClipboardList,
   Clock,
   Plus,
   RotateCcw,
@@ -98,7 +99,7 @@ export default function DashboardPage() {
         </header>
 
         <section className="mb-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          <StatCard label="Total tasks" value={stats.total} icon={ListChecks} color="text-primary" bg="bg-indigo-50" />
+          <StatCard label="Total tasks" value={stats.total} icon={ClipboardList} color="text-primary" bg="bg-indigo-50" />
           <StatCard label="Completed" value={stats.done} icon={CheckCircle2} color="text-emerald-600" bg="bg-emerald-50" />
           <StatCard label="High priority" value={stats.high} icon={AlertCircle} color="text-rose-600" bg="bg-rose-50" />
           <StatCard label="Progress" value={`${stats.progress}%`} icon={Clock} color="text-amber-600" bg="bg-amber-50" />
