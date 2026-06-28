@@ -9,3 +9,10 @@ export interface Task {
   priority: Priority;
   dueDate: string;
 }
+
+export interface Project {
+  id: string;
+  name: string;
+  description: string;
+  progress: number;
+}

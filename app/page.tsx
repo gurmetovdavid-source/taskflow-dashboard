@@ -7,7 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Select } from '@/components/ui/select';
 import { Task, TaskStatus, Priority } from '@/lib/types';
 import { getTasks, resetDemo, saveTasks } from '@/lib/storage';
-import { CheckCircle2, Clock, Layout, Plus, RotateCcw, Trash2 } from 'lucide-react';
+import { CheckCircle2, Clock, Plus, RotateCcw, Trash2 } from 'lucide-react';
 
 const columns: TaskStatus[] = ['todo', 'in-progress', 'done'];
 
@@ -71,11 +71,10 @@ export default function DashboardPage() {
   return (
     <main className="min-h-screen p-6 md:p-10">
       <div className="mx-auto max-w-7xl">
-        <header className="mb-10 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <header className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <h1 className="text-3xl font-bold text-slate-900">TaskFlow</h1>
-            <p className="mt-2 text-slate-600">Team task board and project overview</p>
-            <p className="mt-1 text-xs text-slate-400">Portfolio demo — data is stored locally in your browser.</p>
+            <h1 className="text-2xl font-bold text-slate-900">Dashboard</h1>
+            <p className="text-sm text-slate-500">Team task board and project overview</p>
           </div>
           <Button variant="secondary" onClick={() => { resetDemo(); setTasks(getTasks()); }}>
             <RotateCcw size={16} className="mr-2" /> Reset board
